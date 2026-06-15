@@ -13,11 +13,15 @@ const taskSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      minlength:1,
+      maxlength: 200,
     },
 
     description: {
       type: String,
       trim: true,
+      maxlength: 2000,
+    
     },
 
     status: {
