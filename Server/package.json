@@ -4,7 +4,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon ./src/server.js"
+    "server": "nodemon ./src/server.js",
+    "dev": "NODE_ENV=development nodemon ./src/server.js",
+    "prod": "NODE_ENV=production nodemon ./src/server.js"
   },
   "keywords": [],
   "author": "",
