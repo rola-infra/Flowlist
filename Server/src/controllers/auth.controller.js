@@ -95,3 +95,19 @@ export const protect = async (req, res, next) => {
   req.user = currentUser;
   next();
 };
+
+export const logout = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out successfully',
+  });
+};
+
+export const getMyProfile = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: req.user,
+    },
+  });
+};
