@@ -2,6 +2,7 @@ import express from 'express';
 import { protect } from '../controllers/auth.controller.js';
 import {
   getTasks,
+  getTaskStats,
   getTaskById,
   updateTask,
   deleteTask,
@@ -16,6 +17,7 @@ const router = express.Router();
 //router.post('/', createTask);
 
 router.route('/').get(protect, getTasks).post(protect, createTask);
+router.route('/stats').get(protect, getTaskStats);
 router
   .route('/:id')
   .patch(protect, updateTask)
