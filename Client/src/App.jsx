@@ -1,39 +1,20 @@
-import { useState } from 'react'
+import { Routes, Route } from "react-router-dom";
+
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import Dashboard from "./pages/Dashboard.jsx";
+import Tasks from "./pages/Tasks.jsx";
 
 function App() {
-  const [text, setText] = useState("")
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-  <input
-    type="text"
-    value={text}
-    onChange={(e) => setText(e.target.value)}
-    className="
-      w-full
-      max-w-md
-      border
-      p-3
-      rounded
-      text-base
-      md:text-lg
-    "
-  />
-
-  <h1
-    className="
-      text-xl
-      md:text-3xl
-      lg:text-5xl
-      font-bold
-      text-blue-600
-      text-center
-    "
-  >
-    {text}
-  </h1>
-</div>
-  )
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/tasks" element={<Tasks />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

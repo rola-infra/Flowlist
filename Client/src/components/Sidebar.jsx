@@ -1,0 +1,29 @@
+import { Link } from "react-router-dom";
+
+function Sidebar() {
+  return (
+    <aside className="w-64 min-h-screen bg-slate-900 text-white p-6">
+      <h1 className="text-2xl font-bold mb-8">Task Manager</h1>
+
+      <nav className="flex flex-col gap-4">
+        <Link to="/dashboard" className="p-3 rounded hover:bg-slate-800">
+          Dashboard
+        </Link>
+
+        <Link to="/tasks" className="p-3 rounded hover:bg-slate-800">
+          Tasks
+        </Link>
+
+        <Link to="/profile" className="p-3 rounded hover:bg-slate-800">
+          Profile
+        </Link>
+
+        <button className="p-3 rounded text-left hover:bg-red-600 mt-8">
+          Logout
+        </button>
+      </nav>
+    </aside>
+  );
+}
+
+export default Sidebar;

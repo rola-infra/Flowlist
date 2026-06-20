@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import hpp from 'hpp';
 import mongoSanitize from 'express-mongo-sanitize';
+import cors from 'cors';
 
 const app = express();
 
@@ -17,6 +18,11 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 app.use(express.json({ limit: '10kb' }));
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  }),
+);
 app.set('query parser', 'extended');
 app.use((req, res, next) => {
   Object.defineProperty(req, 'query', {
