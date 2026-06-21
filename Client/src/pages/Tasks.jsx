@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Sidebar from "../components/Sidebar.jsx";
 
 function Tasks() {
   // STATES
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [editingTask, setEditingTask] = useState(null);
+  const [status, setStatus] = useState("todo");
+  const [priority, setPriority] = useState("medium");
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterPriority, setFilterPriority] = useState("");
+  const [sort, setSort] = useState("-createdAt");
+  const [page, setPage] = useState(1);
 
   // GET TASKS
   async function getTasks() {
@@ -13,10 +22,19 @@ function Tasks() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get("http://127.0.0.1:4000/api/v1/tasks", {
+        params: {
+          search,
+          status: filterStatus,
+          priority: filterPriority,
+          sort,
+          page,
+          limit: 5,
+        },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data);
 
       setTasks(response.data.data.tasks);
     } catch (err) {
@@ -36,6 +54,8 @@ function Tasks() {
         {
           title,
           description,
+          status,
+          priority,
         },
         {
           headers: {
@@ -53,56 +73,215 @@ function Tasks() {
     }
   }
 
+  // DeLETE TASK
+  async function deleteTask(id) {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`http://127.0.0.1:4000/api/v1/tasks/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      getTasks();
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+    }
+  }
+  async function updateTask(e) {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.patch(
+        `http://127.0.0.1:4000/api/v1/tasks/${editingTask._id}`,
+        {
+          title,
+          description,
+          status,
+          priority,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setEditingTask(null);
+      setTitle("");
+      setDescription("");
+
+      getTasks();
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+    }
+  }
+
   // RUN ON PAGE LOAD
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [search, filterStatus, filterPriority, sort, page]);
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Tasks</h1>
+    <div className="flex">
+      <Sidebar />
+      <div className="p-8">
+        <h1 className="text-3xl font-bold mb-6">Tasks</h1>
 
-      {/* CREATE TASK FORM */}
-      <form onSubmit={createTask} className="border rounded p-4 mb-6">
-        <h2 className="text-xl font-bold mb-4">Create Task</h2>
+        {/* CREATE TASK FORM */}
+        <form
+          onSubmit={editingTask ? updateTask : createTask}
+          className="border rounded p-4 mb-6"
+        >
+          <h2 className="text-xl font-bold mb-4">Create Task</h2>
 
+          <input
+            type="text"
+            placeholder="Task Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="border p-2 rounded w-full mb-4"
+          />
+
+          <textarea
+            placeholder="Task Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border p-2 rounded w-full mb-4"
+          />
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="border p-2 rounded w-full mb-4"
+          >
+            <option value="todo">Todo</option>
+
+            <option value="progress">In Progress</option>
+
+            <option value="done">Done</option>
+          </select>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="border p-2 rounded w-full mb-4"
+          >
+            <option value="low">Low</option>
+
+            <option value="medium">Medium</option>
+
+            <option value="high">High</option>
+          </select>
+
+          <button type="submit" className="mt-4 border rounded px-4 py-2">
+            {editingTask ? "Update Task" : "Create Task"}
+          </button>
+        </form>
+
+        {/* TASK LIST */}
+        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <option value="-createdAt">Newest</option>
+
+          <option value="createdAt">Oldest</option>
+
+          <option value="priority">Priority</option>
+        </select>
+        <div className="flex gap-4 mb-4">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="border p-2 rounded"
+          >
+            <option value="">All Status</option>
+            <option value="todo">Todo</option>
+            <option value="progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+
+          <select
+            value={filterPriority}
+            onChange={(e) => setFilterPriority(e.target.value)}
+            className="border p-2 rounded"
+          >
+            <option value="">All Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
         <input
           type="text"
-          placeholder="Task Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Search Tasks"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           className="border p-2 rounded w-full mb-4"
         />
+        <div className="space-y-4">
+          {tasks.length === 0 ? (
+            <p>No tasks found</p>
+          ) : (
+            tasks.map((task) => (
+              <div key={task._id} className="border rounded p-4">
+                <h2 className="text-xl font-bold">{task.title}</h2>
 
-        <textarea
-          placeholder="Task Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
-        />
+                <p>{task.description}</p>
 
-        <button type="submit" className="border rounded p-2">
-          Create Task
-        </button>
-      </form>
+                <p>Status: {task.status}</p>
 
-      {/* TASK LIST */}
-      <div className="space-y-4">
-        {tasks.length === 0 ? (
-          <p>No tasks found</p>
-        ) : (
-          tasks.map((task) => (
-            <div key={task._id} className="border rounded p-4">
-              <h2 className="text-xl font-bold">{task.title}</h2>
+                <p>Priority: {task.priority}</p>
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => {
+                      setEditingTask(task);
 
-              <p>{task.description}</p>
+                      setTitle(task.title);
 
-              <p>Status: {task.status}</p>
+                      setDescription(task.description);
+                      setStatus(task.status);
+                      setPriority(task.priority);
+                    }}
+                    className="mt-4 border rounded px-4 py-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      const confirmed = window.confirm(
+                        "Are you sure you want to delete this task?",
+                      );
 
-              <p>Priority: {task.priority}</p>
-            </div>
-          ))
-        )}
+                      if (confirmed) {
+                        deleteTask(task._id);
+                      }
+                    }}
+                    className="mt-4 border rounded px-4 py-2"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+          <div className="flex gap-4 mt-6">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="border px-4 py-2 rounded"
+            >
+              Prev
+            </button>
+
+            <span>Page {page}</span>
+
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              className="border px-4 py-2 rounded"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

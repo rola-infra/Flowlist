@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  function logout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white p-6">
       <h1 className="text-2xl font-bold mb-8">Task Manager</h1>
@@ -18,7 +25,10 @@ function Sidebar() {
           Profile
         </Link>
 
-        <button className="p-3 rounded text-left hover:bg-red-600 mt-8">
+        <button
+          onClick={logout}
+          className="p-3 rounded text-left hover:bg-red-600 mt-8"
+        >
           Logout
         </button>
       </nav>

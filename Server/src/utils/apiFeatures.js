@@ -8,6 +8,11 @@ export class apiFeatures {
     const queryObj = { ...this.queryString };
     const excludeFields = ['page', 'sort', 'limit', 'fields', 'search'];
     excludeFields.forEach((el) => delete queryObj[el]);
+    Object.keys(queryObj).forEach((key) => {
+      if (queryObj[key] === '') {
+        delete queryObj[key];
+      }
+    });
     let queryStr = JSON.stringify(queryObj);
 
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
