@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config/api";
+import { Link } from "react-router-dom";
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,15 +14,12 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:4000/api/v1/auth/signup",
-        {
-          name,
-          email,
-          password,
-          passwordConfirm,
-        },
-      );
+      const response = await axios.post(`${API_URL}/auth/signup`, {
+        name,
+        email,
+        password,
+        passwordConfirm,
+      });
 
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
@@ -31,7 +30,10 @@ function Signup() {
   }
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <form className="border m-4 p-4 rounded max-w-sm" onSubmit={handleSubmit}>
+      <form
+        className="border m-4 p-4 rounded w-full max-w-sm"
+        onSubmit={handleSubmit}
+      >
         <h1 className="text-2xl font-bold mb-6">Signup</h1>
 
         <label className="block" htmlFor="name">
@@ -97,9 +99,18 @@ function Signup() {
         <br />
         <br />
 
-        <button type="submit" className="border p-2 rounded w-full">
+        <button
+          type="submit"
+          className="bg-slate-900 text-white p-2 rounded w-full"
+        >
           Signup
         </button>
+        <p className="mt-4 text-center">
+          Already have an account?{" "}
+          <Link to="/login" className="underline">
+            Login
+          </Link>
+        </p>
       </form>
     </div>
   );

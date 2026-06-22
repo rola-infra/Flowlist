@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar.jsx";
+import { API_URL } from "../config/api";
 
 function Tasks() {
   // STATES
@@ -21,7 +22,7 @@ function Tasks() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://127.0.0.1:4000/api/v1/tasks", {
+      const response = await axios.get(`${API_URL}/tasks`, {
         params: {
           search,
           status: filterStatus,
@@ -50,7 +51,7 @@ function Tasks() {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://127.0.0.1:4000/api/v1/tasks",
+        `${API_URL}/tasks`,
         {
           title,
           description,
@@ -78,7 +79,7 @@ function Tasks() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://127.0.0.1:4000/api/v1/tasks/${id}`, {
+      await axios.delete(`${API_URL}/tasks/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -96,7 +97,7 @@ function Tasks() {
       const token = localStorage.getItem("token");
 
       await axios.patch(
-        `http://127.0.0.1:4000/api/v1/tasks/${editingTask._id}`,
+        `${API_URL}/tasks/${editingTask._id}`,
         {
           title,
           description,
@@ -128,7 +129,7 @@ function Tasks() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="p-8">
+      <div className="p-4 md:p-8 w-full">
         <h1 className="text-3xl font-bold mb-6">Tasks</h1>
 
         {/* CREATE TASK FORM */}
@@ -181,14 +182,18 @@ function Tasks() {
         </form>
 
         {/* TASK LIST */}
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="border p-2 rounded w-full md:w-auto mb-4"
+        >
           <option value="-createdAt">Newest</option>
 
           <option value="createdAt">Oldest</option>
 
           <option value="priority">Priority</option>
         </select>
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
@@ -231,7 +236,7 @@ function Tasks() {
                 <p>Status: {task.status}</p>
 
                 <p>Priority: {task.priority}</p>
-                <div className="flex gap-2 mt-4">
+                <div className="flex flex-col sm:flex-row gap-2 mt-4">
                   <button
                     onClick={() => {
                       setEditingTask(task);
@@ -264,7 +269,7 @@ function Tasks() {
               </div>
             ))
           )}
-          <div className="flex gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row gap-4 mt-6 items-center">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="border px-4 py-2 rounded"

@@ -9,8 +9,10 @@ function Sidebar() {
   }
 
   return (
-    <aside className="w-64 min-h-screen bg-slate-900 text-white p-6">
-      <h1 className="text-2xl font-bold mb-8">Task Manager</h1>
+    // <aside className="w-20 md:w-64 min-h-screen bg-slate-900 text-white p-3 md:p-6">
+
+    <aside className="hidden md:block w-64 min-h-screen bg-slate-900 text-white p-6">
+      <h1 className="hidden md:block text-2xl font-bold mb-8">Task Manager</h1>
 
       <nav className="flex flex-col gap-4">
         <Link to="/dashboard" className="p-3 rounded hover:bg-slate-800">

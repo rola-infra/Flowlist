@@ -1,6 +1,6 @@
 function RecentTasks({ tasks }) {
   return (
-    <div className="border rounded p-4 mt-6 max-w-md">
+    <div className="border rounded p-4 mt-6 w-full max-w-md">
       <h2 className="text-xl font-bold mb-4">Recent Tasks</h2>
 
       {tasks.length === 0 ? (

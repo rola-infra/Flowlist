@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar.jsx";
+import { API_URL } from "../config/api";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -10,14 +11,11 @@ function Profile() {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(
-          "http://127.0.0.1:4000/api/v1/auth/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await axios.get(`${API_URL}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         setUser(response.data.data.user);
       } catch (err) {
@@ -35,10 +33,10 @@ function Profile() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="p-8 w-full">
+      <div className="p-4 md:p-8 w-full">
         <h1 className="text-3xl font-bold mb-6">Profile</h1>
 
-        <div className="border rounded p-6">
+        <div className="border rounded p-4 md:p-6">
           <div className="mb-4">
             <p className="font-bold">Name</p>
             <p>{user.name}</p>
