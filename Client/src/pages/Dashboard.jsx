@@ -8,6 +8,7 @@ import { API_URL } from "../config/api";
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [error, setError] = useState("");
 
   async function getStats() {
     try {
@@ -27,14 +28,18 @@ function Dashboard() {
       });
 
       setTasks(taskResponse.data.data.tasks);
+      setError("");
     } catch (err) {
-      console.log(err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
   console.log(stats);
   useEffect(() => {
     getStats();
   }, []);
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   if (!stats) {
     return <p>Loading...</p>;

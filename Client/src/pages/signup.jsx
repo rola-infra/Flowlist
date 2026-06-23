@@ -10,6 +10,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [error, setError] = useState("");
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -23,9 +24,9 @@ function Signup() {
 
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
-      console.log(response.data);
+      setError("");
     } catch (err) {
-      console.log(err.response.data);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
   return (
@@ -98,7 +99,7 @@ function Signup() {
         />
         <br />
         <br />
-
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <button
           type="submit"
           className="bg-slate-900 text-white p-2 rounded w-full"

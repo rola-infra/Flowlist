@@ -16,6 +16,7 @@ function Tasks() {
   const [filterPriority, setFilterPriority] = useState("");
   const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
+  const [error, setError] = useState("");
 
   // GET TASKS
   async function getTasks() {
@@ -35,11 +36,11 @@ function Tasks() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      setError("");
 
       setTasks(response.data.data.tasks);
     } catch (err) {
-      console.log(err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
 
@@ -67,10 +68,11 @@ function Tasks() {
 
       setTitle("");
       setDescription("");
+      setError("");
 
       getTasks();
     } catch (err) {
-      console.log(err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
 
@@ -84,10 +86,11 @@ function Tasks() {
           Authorization: `Bearer ${token}`,
         },
       });
+      setError("");
 
       getTasks();
     } catch (err) {
-      console.log(err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
   async function updateTask(e) {
@@ -116,8 +119,9 @@ function Tasks() {
       setDescription("");
 
       getTasks();
+      setError("");
     } catch (err) {
-      console.log(err.response?.data || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
 
@@ -131,6 +135,8 @@ function Tasks() {
       <Sidebar />
       <div className="p-4 md:p-8 w-full">
         <h1 className="text-3xl font-bold mb-6">Tasks</h1>
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
         {/* CREATE TASK FORM */}
         <form

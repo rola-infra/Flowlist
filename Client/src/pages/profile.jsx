@@ -5,6 +5,7 @@ import { API_URL } from "../config/api";
 
 function Profile() {
   const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function getProfile() {
@@ -19,12 +20,15 @@ function Profile() {
 
         setUser(response.data.data.user);
       } catch (err) {
-        console.log(err.response?.data || err.message);
+        setError(err.response?.data?.message || "Something went wrong");
       }
     }
 
     getProfile();
   }, []);
+  if (error) {
+    return <h1>{error}</h1>;
+  }
 
   if (!user) {
     return <h1>Loading...</h1>;

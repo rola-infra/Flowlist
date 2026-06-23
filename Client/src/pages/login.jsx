@@ -8,6 +8,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -19,9 +20,10 @@ function Login() {
 
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
-      console.log(response.data);
+
+      setError("");
     } catch (err) {
-      console.log(err.response.data);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   }
   return (
@@ -63,6 +65,8 @@ function Login() {
 
         <br />
         <br />
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
         <button
           type="submit"
