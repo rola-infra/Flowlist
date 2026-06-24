@@ -1,5 +1,4 @@
 services:
-
   mongo:
     image: mongo:7
     restart: unless-stopped
@@ -26,6 +25,8 @@ services:
   client:
     build: ./Client
     restart: unless-stopped
+    env_file:
+      - ./Client/.env
     ports:
       - "5173:5173"
     depends_on:
@@ -39,7 +40,3 @@ networks:
 
 volumes:
   mongo_data:
-  
-  
-  
-  
