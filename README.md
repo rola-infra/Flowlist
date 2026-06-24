@@ -4,11 +4,23 @@
 
 ---
 
+
 ## 🌐 Live Demo
 
 **[https://flowlist.rolaconsult.com](https://flowlist.rolaconsult.com)**
 
 Deployed on an Ubuntu VPS with Docker Compose, Nginx reverse proxy, and Let's Encrypt SSL.
+
+---
+
+## 🔑 Demo Account
+
+For evaluator testing:
+
+Email: demo@example.com
+Password: Demo123@
+
+Alternatively, users can create their own account using the Signup page.
 
 ---
 
